@@ -687,6 +687,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('Successfully signed in!', 'success');
                 // Update UI for signed-in state
                 updateAuthUI();
+                // Show blank page after sign in
+                showBlankPage();
             } else {
                 showNotification(result.error, 'error');
                 submitBtn.disabled = false;
@@ -847,6 +849,7 @@ async function updateAuthUI() {
                 if (result.success) {
                     showNotification('Successfully signed out!', 'success');
                     updateAuthUI();
+                    hideBlankPage();
                 }
             };
         }
@@ -859,6 +862,82 @@ async function updateAuthUI() {
             signUpBtn.onclick = null; // Remove sign out handler
         }
     }
+}
+
+// Show blank page after sign in
+function showBlankPage() {
+    // Hide all main content sections
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Hide Quick Links and Support sections in footer
+    const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
+    const supportSection = document.querySelector('.footer-section:nth-child(3)');
+    if (quickLinksSection) quickLinksSection.style.display = 'none';
+    if (supportSection) supportSection.style.display = 'none';
+    
+    // Hide navigation menu links
+    const navMenu = document.querySelector('.nav-menu');
+    if (navMenu) navMenu.style.display = 'none';
+    
+    // Add sign out button to header
+    const navContainer = document.querySelector('.nav-container');
+    const signOutBtn = document.createElement('button');
+    signOutBtn.className = 'btn btn-secondary sign-out-btn';
+    signOutBtn.innerHTML = '<span class="btn-icon">🚪</span>Sign Out';
+    signOutBtn.onclick = async () => {
+        const result = await auth.signOut();
+        if (result.success) {
+            showNotification('Successfully signed out!', 'success');
+            updateAuthUI();
+            hideBlankPage();
+        }
+    };
+    navContainer.appendChild(signOutBtn);
+    
+    // Create blank page content
+    const blankPage = document.createElement('div');
+    blankPage.id = 'blank-page';
+    blankPage.className = 'blank-page';
+    blankPage.innerHTML = `
+        <div class="blank-content">
+            <h1>Welcome Thalman</h1>
+        </div>
+    `;
+    
+    // Insert blank page after header
+    const header = document.querySelector('header');
+    header.parentNode.insertBefore(blankPage, header.nextSibling);
+}
+
+// Hide blank page and show original content
+function hideBlankPage() {
+    const blankPage = document.getElementById('blank-page');
+    if (blankPage) {
+        blankPage.remove();
+    }
+    
+    // Show all main content sections
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.display = 'block';
+    });
+    
+    // Show Quick Links and Support sections in footer
+    const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
+    const supportSection = document.querySelector('.footer-section:nth-child(3)');
+    if (quickLinksSection) quickLinksSection.style.display = 'block';
+    if (supportSection) supportSection.style.display = 'block';
+
+    // Show navigation menu links
+    const navMenu = document.querySelector('.nav-menu');
+    if (navMenu) navMenu.style.display = 'flex';
+    
+    // Remove sign out button
+    const signOutBtn = document.querySelector('.sign-out-btn');
+    if (signOutBtn) signOutBtn.remove();
 }
 
 // Listen to authentication state changes
