@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storio - Magical Bedtime Stories for Kids</title>
+    <meta name="description" content="Create personalized bedtime stories with AI. Narrated by family voices for magical bedtime moments.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#FF6B35">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Storio">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-icon">🌟</div>
+                    <span class="logo-text">Storio</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+                <button class="nav-toggle" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Magical Bedtime Stories
+                    <span class="hero-subtitle">Personalized Just for Your Little One</span>
+                </h1>
+                <p class="hero-description">
+                    Create enchanting bedtime stories featuring your child's name, favorite toys, and characters. 
+                    Narrated by the voices they love most - mom, dad, or grandparents.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary popup-trigger" data-popup="signin">
+                        <span class="btn-icon">🔑</span>
+                        Sign In
+                    </button>
+                    <button class="btn btn-secondary popup-trigger" data-popup="signup">
+                        <span class="btn-icon">✨</span>
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="story-scene">
+                    <div class="moon">🌙</div>
+                    <div class="stars">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+                    <div class="animals">
+                        <div class="animal bunny">🐰</div>
+                        <div class="animal bear">🐻</div>
+                        <div class="animal owl">🦉</div>
+                        <div class="animal fox">🦊</div>
+                    </div>
+                    <div class="clouds">
+                        <div class="cloud cloud-1">☁️</div>
+                        <div class="cloud cloud-2">☁️</div>
+                        <div class="cloud cloud-3">☁️</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Why Parents Love Storio</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎭</div>
+                    <h3>Personalized Stories</h3>
+                    <p>AI generates unique stories featuring your child's name, favorite toys, and characters they love.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Family Voices</h3>
+                    <p>Record and use voices of family members to narrate stories, creating a personal connection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌙</div>
+                    <h3>Calming Design</h3>
+                    <p>Beautiful, soothing interface designed to help children relax and prepare for sleep.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Interactive Elements</h3>
+                    <p>Gentle animations and interactive elements that engage without overstimulating.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="features">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>1. Set Up Profile</h3>
+                    <p>Create your child's profile with their name, age, favorite toys, and characters they love.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <h3>2. Record Voices</h3>
+                    <p>Record family members' voices to narrate the stories - mom, dad, grandparents, or siblings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>3. AI Generates Story</h3>
+                    <p>Our AI creates a unique, personalized story featuring your child and their favorite things.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h3>4. Enjoy Together</h3>
+                    <p>Listen to the narrated story together, creating magical bedtime moments with your family.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Parents Say</h2>
+            <div class="testimonials-grid">
+                <!-- Original testimonials -->
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👩‍👧</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Storio has transformed our bedtime routine! Emma gets so excited when she hears her name in the stories. The personalized touch makes it magical."</p>
+                        <div class="testimonial-author">
+                            <h4>Sarah M.</h4>
+                            <span class="author-role">Mom of Emma, 5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👨‍👦</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Liam loves hearing stories with his teddy bear as the hero. The AI creates such creative adventures that we never get bored!"</p>
+                        <div class="testimonial-author">
+                            <h4>Michael R.</h4>
+                            <span class="author-role">Dad of Liam, 4</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👵‍👶</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"As a grandmother, I love being able to record my voice for the stories. It keeps me connected with my grandkids even when I'm far away."</p>
+                        <div class="testimonial-author">
+                            <h4>Margaret T.</h4>
+                            <span class="author-role">Grandma of Sophia, 6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👩‍👦‍👦</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Having two boys with different interests, Storio creates unique stories for each of them. It's like having a personal storyteller!"</p>
+                        <div class="testimonial-author">
+                            <h4>Jennifer L.</h4>
+                            <span class="author-role">Mom of twins, 3</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👨‍👩‍👧‍👦</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"The calming design and gentle animations help our kids wind down perfectly. It's become our favorite family tradition."</p>
+                        <div class="testimonial-author">
+                            <h4>David & Lisa K.</h4>
+                            <span class="author-role">Parents of 4 kids</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Duplicated testimonials for seamless scrolling -->
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👩‍👧</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Storio has transformed our bedtime routine! Emma gets so excited when she hears her name in the stories. The personalized touch makes it magical."</p>
+                        <div class="testimonial-author">
+                            <h4>Sarah M.</h4>
+                            <span class="author-role">Mom of Emma, 5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👨‍👦</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Liam loves hearing stories with his teddy bear as the hero. The AI creates such creative adventures that we never get bored!"</p>
+                        <div class="testimonial-author">
+                            <h4>Michael R.</h4>
+                            <span class="author-role">Dad of Liam, 4</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👵‍👶</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"As a grandmother, I love being able to record my voice for the stories. It keeps me connected with my grandkids even when I'm far away."</p>
+                        <div class="testimonial-author">
+                            <h4>Margaret T.</h4>
+                            <span class="author-role">Grandma of Sophia, 6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👩‍👦‍👦</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Having two boys with different interests, Storio creates unique stories for each of them. It's like having a personal storyteller!"</p>
+                        <div class="testimonial-author">
+                            <h4>Jennifer L.</h4>
+                            <span class="author-role">Mom of twins, 3</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <span class="avatar-icon">👨‍👩‍👧‍👦</span>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"The calming design and gentle animations help our kids wind down perfectly. It's become our favorite family tradition."</p>
+                        <div class="testimonial-author">
+                            <h4>David & Lisa K.</h4>
+                            <span class="author-role">Parents of 4 kids</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How does the AI personalize stories for my child?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our AI uses your child's name, favorite toys, characters, and interests to create unique stories. Simply input these details in the app, and our AI will weave them into magical bedtime adventures that feel specially crafted for your little one.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I record multiple family members' voices?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can record voices from mom, dad, grandparents, or any family member. The app allows you to create multiple voice profiles, so your child can choose who narrates their story each night.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Is the app safe for children?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Storio is designed with child safety in mind. All stories are age-appropriate, there are no ads, and we use secure, encrypted storage for your family's voice recordings and personal information.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How many stories can I create?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can create unlimited stories! Our AI generates new content every time, so your child will never hear the same story twice. Each story is unique and personalized to their current interests.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I use the app offline?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Once you've created and downloaded stories, you can listen to them offline. Perfect for bedtime routines, car rides, or when you're away from internet connectivity.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What age range is Storio designed for?</h3>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Storio is perfect for children ages 2-10. The AI adjusts story complexity based on your child's age, ensuring the content is engaging and appropriate for their developmental stage.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">🌟</div>
+                        <span class="logo-text">Storio</span>
+                    </div>
+                    <p>Creating magical bedtime moments, one story at a time.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#" class="popup-trigger" data-popup="privacy">Privacy Policy</a></li>
+                        <li><a href="#" class="popup-trigger" data-popup="terms">Terms of Service</a></li>
+                        <li><a href="#" class="popup-trigger" data-popup="contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Storio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Popup Modals -->
+    <div id="popup-overlay" class="popup-overlay">
+        <div class="popup-modal">
+            <div class="popup-header">
+                <h3 id="popup-title">Title</h3>
+                <button class="popup-close" id="popup-close">×</button>
+            </div>
+            <div class="popup-content" id="popup-content">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script src="supabase-config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
