@@ -11,6 +11,9 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Development flag to temporarily bypass authentication and popups
+const AUTH_DISABLED = true;
+
 // Mobile Navigation Toggle
 document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.querySelector('.nav-toggle');
@@ -586,6 +589,15 @@ document.addEventListener('DOMContentLoaded', function() {
     popupTriggers.forEach(trigger => {
         trigger.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // If auth is disabled, skip popups and go straight inside
+            if (AUTH_DISABLED && this.getAttribute('data-popup') === 'signin') {
+                closePopup();
+                showNotification('Signed in (dev bypass)', 'success');
+                router.navigate('/dashboard');
+                return;
+            }
+            
             const popupType = this.getAttribute('data-popup');
             openPopup(popupType);
         });
@@ -600,8 +612,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Form validation for Sign In
+    // Form validation for Sign In (disabled during dev bypass)
     popupContent.addEventListener('input', function(e) {
+        if (AUTH_DISABLED) return;
         if (e.target.closest('.login-form')) {
             const form = e.target.closest('.login-form');
             const email = form.querySelector('#email');
@@ -672,6 +685,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Sign In form
         if (e.target.classList.contains('login-form')) {
+            if (AUTH_DISABLED) {
+                closePopup();
+                showNotification('Signed in (dev bypass)', 'success');
+                router.navigate('/dashboard');
+                return;
+            }
             const email = e.target.querySelector('#email').value;
             const password = e.target.querySelector('#password').value;
             const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -834,6 +853,20 @@ async function updateAuthUI() {
     const signInBtn = document.querySelector('.btn-primary[data-popup="signin"]');
     const signUpBtn = document.querySelector('.btn-secondary[data-popup="signup"]');
     
+    if (AUTH_DISABLED) {
+        // Dev bypass: always show dashboard CTA and skip auth redirects
+        if (signInBtn) signInBtn.textContent = 'Welcome, Guest';
+        if (signUpBtn) {
+            signUpBtn.textContent = 'Dashboard';
+            signUpBtn.removeAttribute('data-popup');
+            signUpBtn.onclick = () => router.navigate('/dashboard');
+        }
+        if (window.location.pathname === '/' && router?.currentRoute === '/') {
+            router.navigate('/dashboard');
+        }
+        return;
+    }
+
     if (user) {
         // User is signed in
         if (signInBtn) signInBtn.textContent = `Welcome, ${user.user_metadata?.full_name || user.email}`;
@@ -898,13 +931,15 @@ function updateProfile() {
     // TODO: Implement profile update logic
 }
 
-// Listen to authentication state changes
-auth.onAuthStateChange((event, session) => {
-    console.log('Auth state changed:', event, session);
-    if (router) {
-        updateAuthUI();
-    }
-});
+// Listen to authentication state changes (disabled during dev bypass)
+if (!AUTH_DISABLED) {
+    auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event, session);
+        if (router) {
+            updateAuthUI();
+        }
+    });
+}
 
 // Initialize UI on page load
 document.addEventListener('DOMContentLoaded', async function() {
@@ -969,8 +1004,8 @@ class Router {
     
     renderPage(path) {
         // Hide all sections first
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
             section.style.display = 'none';
         });
         
@@ -991,11 +1026,11 @@ class Router {
         }
         
         // Show/hide footer sections
-        const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
-        const supportSection = document.querySelector('.footer-section:nth-child(3)');
+    const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
+    const supportSection = document.querySelector('.footer-section:nth-child(3)');
         if (path === '/') {
-            if (quickLinksSection) quickLinksSection.style.display = 'block';
-            if (supportSection) supportSection.style.display = 'block';
+    if (quickLinksSection) quickLinksSection.style.display = 'block';
+    if (supportSection) supportSection.style.display = 'block';
         } else {
             if (quickLinksSection) quickLinksSection.style.display = 'none';
             if (supportSection) supportSection.style.display = 'none';
