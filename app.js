@@ -687,8 +687,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('Successfully signed in!', 'success');
                 // Update UI for signed-in state
                 updateAuthUI();
-                // Show blank page after sign in
-                showBlankPage();
             } else {
                 showNotification(result.error, 'error');
                 submitBtn.disabled = false;
@@ -849,8 +847,8 @@ async function updateAuthUI() {
             };
         }
         
-        // If we're on home page and user is logged in, redirect to dashboard
-        if (window.location.pathname === '/') {
+        // Only redirect to dashboard if we're on the home page and not already on a protected route
+        if (window.location.pathname === '/' && router.currentRoute === '/') {
             router.navigate('/dashboard');
         }
     } else {
@@ -903,16 +901,20 @@ function updateProfile() {
 // Listen to authentication state changes
 auth.onAuthStateChange((event, session) => {
     console.log('Auth state changed:', event, session);
-    updateAuthUI();
+    if (router) {
+        updateAuthUI();
+    }
 });
 
 // Initialize UI on page load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Initialize router first
     router = new Router();
     
-    // Then update auth UI
-    updateAuthUI();
+    // Wait a bit for router to initialize, then update auth UI
+    setTimeout(() => {
+        updateAuthUI();
+    }, 100);
 });
 
 // Client-side Router
@@ -960,6 +962,9 @@ class Router {
         }
         
         this.renderPage(path);
+        
+        // Update page title
+        document.title = `${route.title} - Storio`;
     }
     
     renderPage(path) {
