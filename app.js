@@ -839,19 +839,19 @@ async function updateAuthUI() {
     if (user) {
         // User is signed in
         if (signInBtn) signInBtn.textContent = `Welcome, ${user.user_metadata?.full_name || user.email}`;
-        if (signUpBtn) signUpBtn.textContent = 'Sign Out';
+        if (signUpBtn) signUpBtn.textContent = 'Dashboard';
         
-        // Update sign up button to sign out
+        // Update sign up button to go to dashboard
         if (signUpBtn) {
             signUpBtn.removeAttribute('data-popup');
-            signUpBtn.onclick = async () => {
-                const result = await auth.signOut();
-                if (result.success) {
-                    showNotification('Successfully signed out!', 'success');
-                    updateAuthUI();
-                    hideBlankPage();
-                }
+            signUpBtn.onclick = () => {
+                router.navigate('/dashboard');
             };
+        }
+        
+        // If we're on home page and user is logged in, redirect to dashboard
+        if (window.location.pathname === '/') {
+            router.navigate('/dashboard');
         }
     } else {
         // User is signed out
@@ -859,85 +859,45 @@ async function updateAuthUI() {
         if (signUpBtn) {
             signUpBtn.innerHTML = '<span class="btn-icon">✨</span>Sign Up';
             signUpBtn.setAttribute('data-popup', 'signup');
-            signUpBtn.onclick = null; // Remove sign out handler
+            signUpBtn.onclick = null; // Remove dashboard handler
+        }
+        
+        // If we're on a protected route and user is logged out, redirect to home
+        if (window.location.pathname !== '/') {
+            router.navigate('/');
         }
     }
 }
 
-// Show blank page after sign in
-function showBlankPage() {
-    // Hide all main content sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
+// Helper functions for story creation and profile updates
+function createStory() {
+    const childName = document.getElementById('child-name').value;
+    const childAge = document.getElementById('child-age').value;
+    const favoriteCharacter = document.getElementById('favorite-character').value;
+    const storyTheme = document.getElementById('story-theme').value;
     
-    // Hide Quick Links and Support sections in footer
-    const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
-    const supportSection = document.querySelector('.footer-section:nth-child(3)');
-    if (quickLinksSection) quickLinksSection.style.display = 'none';
-    if (supportSection) supportSection.style.display = 'none';
-    
-    // Hide navigation menu links
-    const navMenu = document.querySelector('.nav-menu');
-    if (navMenu) navMenu.style.display = 'none';
-    
-    // Add sign out button to header
-    const navContainer = document.querySelector('.nav-container');
-    const signOutBtn = document.createElement('button');
-    signOutBtn.className = 'btn btn-secondary sign-out-btn';
-    signOutBtn.innerHTML = '<span class="btn-icon">🚪</span>Sign Out';
-    signOutBtn.onclick = async () => {
-        const result = await auth.signOut();
-        if (result.success) {
-            showNotification('Successfully signed out!', 'success');
-            updateAuthUI();
-            hideBlankPage();
-        }
-    };
-    navContainer.appendChild(signOutBtn);
-    
-    // Create blank page content
-    const blankPage = document.createElement('div');
-    blankPage.id = 'blank-page';
-    blankPage.className = 'blank-page';
-    blankPage.innerHTML = `
-        <div class="blank-content">
-            <h1>Welcome Thalman</h1>
-        </div>
-    `;
-    
-    // Insert blank page after header
-    const header = document.querySelector('header');
-    header.parentNode.insertBefore(blankPage, header.nextSibling);
-}
-
-// Hide blank page and show original content
-function hideBlankPage() {
-    const blankPage = document.getElementById('blank-page');
-    if (blankPage) {
-        blankPage.remove();
+    if (!childName || !childAge || !favoriteCharacter) {
+        showNotification('Please fill in all required fields', 'error');
+        return;
     }
     
-    // Show all main content sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        section.style.display = 'block';
-    });
-    
-    // Show Quick Links and Support sections in footer
-    const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
-    const supportSection = document.querySelector('.footer-section:nth-child(3)');
-    if (quickLinksSection) quickLinksSection.style.display = 'block';
-    if (supportSection) supportSection.style.display = 'block';
+    showNotification('Creating your story...', 'success');
+    // TODO: Implement story creation logic
+    setTimeout(() => {
+        showNotification('Story created successfully!', 'success');
+        router.navigate('/my-stories');
+    }, 2000);
+}
 
-    // Show navigation menu links
-    const navMenu = document.querySelector('.nav-menu');
-    if (navMenu) navMenu.style.display = 'flex';
+function updateProfile() {
+    const name = document.getElementById('profile-name').value;
+    if (!name) {
+        showNotification('Please enter your name', 'error');
+        return;
+    }
     
-    // Remove sign out button
-    const signOutBtn = document.querySelector('.sign-out-btn');
-    if (signOutBtn) signOutBtn.remove();
+    showNotification('Profile updated successfully!', 'success');
+    // TODO: Implement profile update logic
 }
 
 // Listen to authentication state changes
@@ -948,5 +908,283 @@ auth.onAuthStateChange((event, session) => {
 
 // Initialize UI on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize router first
+    router = new Router();
+    
+    // Then update auth UI
     updateAuthUI();
 });
+
+// Client-side Router
+class Router {
+    constructor() {
+        this.routes = {
+            '/': { title: 'Home', public: true },
+            '/dashboard': { title: 'Dashboard', public: false },
+            '/create-story': { title: 'Create Story', public: false },
+            '/my-stories': { title: 'My Stories', public: false },
+            '/profile': { title: 'Profile', public: false },
+            '/settings': { title: 'Settings', public: false }
+        };
+        
+        this.currentRoute = '/';
+        this.init();
+    }
+    
+    init() {
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (e) => {
+            this.navigate(window.location.pathname, false);
+        });
+        
+        // Handle initial page load
+        this.navigate(window.location.pathname, false);
+    }
+    
+    async navigate(path, updateHistory = true) {
+        const route = this.routes[path] || this.routes['/'];
+        
+        // Check authentication for protected routes
+        if (!route.public) {
+            const { data: { user } } = await auth.getCurrentUser();
+            if (!user) {
+                this.navigate('/', updateHistory);
+                return;
+            }
+        }
+        
+        this.currentRoute = path;
+        
+        if (updateHistory) {
+            window.history.pushState({}, route.title, path);
+        }
+        
+        this.renderPage(path);
+    }
+    
+    renderPage(path) {
+        // Hide all sections first
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        // Hide blank page if exists
+        const blankPage = document.getElementById('blank-page');
+        if (blankPage) {
+            blankPage.remove();
+        }
+        
+        // Show/hide navigation based on route
+        const navMenu = document.querySelector('.nav-menu');
+        if (navMenu) {
+            if (path === '/') {
+                navMenu.style.display = 'flex';
+            } else {
+                navMenu.style.display = 'none';
+            }
+        }
+        
+        // Show/hide footer sections
+        const quickLinksSection = document.querySelector('.footer-section:nth-child(2)');
+        const supportSection = document.querySelector('.footer-section:nth-child(3)');
+        if (path === '/') {
+            if (quickLinksSection) quickLinksSection.style.display = 'block';
+            if (supportSection) supportSection.style.display = 'block';
+        } else {
+            if (quickLinksSection) quickLinksSection.style.display = 'none';
+            if (supportSection) supportSection.style.display = 'none';
+        }
+        
+        if (path === '/') {
+            // Show home page sections
+            sections.forEach(section => {
+                section.style.display = 'block';
+            });
+        } else {
+            // Show app content for other routes
+            this.showAppContent(path);
+        }
+        
+        // Update page title
+        document.title = `${route.title} - Storio`;
+    }
+    
+    showAppContent(path) {
+        // Remove existing app content
+        const existingApp = document.getElementById('app-content');
+        if (existingApp) {
+            existingApp.remove();
+        }
+        
+        // Create app container
+        const appContent = document.createElement('div');
+        appContent.id = 'app-content';
+        appContent.className = 'app-content';
+        
+        // Add navigation for app pages
+        const appNav = document.createElement('nav');
+        appNav.className = 'app-nav';
+        appNav.innerHTML = `
+            <div class="app-nav-container">
+                <div class="app-logo">
+                    <div class="logo-icon">🌟</div>
+                    <span class="logo-text">Storio</span>
+                </div>
+                <ul class="app-nav-menu">
+                    <li><a href="#" data-route="/dashboard" class="${path === '/dashboard' ? 'active' : ''}">Dashboard</a></li>
+                    <li><a href="#" data-route="/create-story" class="${path === '/create-story' ? 'active' : ''}">Create Story</a></li>
+                    <li><a href="#" data-route="/my-stories" class="${path === '/my-stories' ? 'active' : ''}">My Stories</a></li>
+                    <li><a href="#" data-route="/profile" class="${path === '/profile' ? 'active' : ''}">Profile</a></li>
+                </ul>
+                <button class="btn btn-secondary sign-out-btn">
+                    <span class="btn-icon">🚪</span>Sign Out
+                </button>
+            </div>
+        `;
+        
+        // Add app navigation event listeners
+        appNav.querySelectorAll('[data-route]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const route = link.getAttribute('data-route');
+                this.navigate(route);
+            });
+        });
+        
+        // Add sign out functionality
+        appNav.querySelector('.sign-out-btn').addEventListener('click', async () => {
+            const result = await auth.signOut();
+            if (result.success) {
+                showNotification('Successfully signed out!', 'success');
+                this.navigate('/');
+            }
+        });
+        
+        appContent.appendChild(appNav);
+        
+        // Add page content based on route
+        const pageContent = document.createElement('div');
+        pageContent.className = 'page-content';
+        
+        switch (path) {
+            case '/dashboard':
+                pageContent.innerHTML = this.getDashboardContent();
+                break;
+            case '/create-story':
+                pageContent.innerHTML = this.getCreateStoryContent();
+                break;
+            case '/my-stories':
+                pageContent.innerHTML = this.getMyStoriesContent();
+                break;
+            case '/profile':
+                pageContent.innerHTML = this.getProfileContent();
+                break;
+            default:
+                pageContent.innerHTML = this.getDashboardContent();
+        }
+        
+        appContent.appendChild(pageContent);
+        
+        // Insert after header
+        const header = document.querySelector('header');
+        header.parentNode.insertBefore(appContent, header.nextSibling);
+    }
+    
+    getDashboardContent() {
+        return `
+            <div class="dashboard-container">
+                <h1>Welcome to Storio</h1>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Quick Actions</h3>
+                        <button class="btn btn-primary" onclick="router.navigate('/create-story')">
+                            <span class="btn-icon">✨</span>Create New Story
+                        </button>
+                        <button class="btn btn-secondary" onclick="router.navigate('/my-stories')">
+                            <span class="btn-icon">📚</span>View My Stories
+                        </button>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Recent Stories</h3>
+                        <p>No stories created yet. Start your first story!</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getCreateStoryContent() {
+        return `
+            <div class="create-story-container">
+                <h1>Create a New Story</h1>
+                <div class="story-form">
+                    <div class="form-group">
+                        <label>Child's Name</label>
+                        <input type="text" placeholder="Enter child's name" id="child-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" placeholder="Age" id="child-age" min="1" max="12">
+                    </div>
+                    <div class="form-group">
+                        <label>Favorite Character</label>
+                        <input type="text" placeholder="e.g., dinosaurs, princesses, superheroes" id="favorite-character">
+                    </div>
+                    <div class="form-group">
+                        <label>Story Theme</label>
+                        <select id="story-theme">
+                            <option value="adventure">Adventure</option>
+                            <option value="fantasy">Fantasy</option>
+                            <option value="educational">Educational</option>
+                            <option value="bedtime">Bedtime</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="createStory()">
+                        <span class="btn-icon">✨</span>Generate Story
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    getMyStoriesContent() {
+        return `
+            <div class="my-stories-container">
+                <h1>My Stories</h1>
+                <div class="stories-grid">
+                    <div class="no-stories">
+                        <p>No stories created yet.</p>
+                        <button class="btn btn-primary" onclick="router.navigate('/create-story')">
+                            <span class="btn-icon">✨</span>Create Your First Story
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getProfileContent() {
+        return `
+            <div class="profile-container">
+                <h1>Profile Settings</h1>
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="Your full name" id="profile-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="Your email" id="profile-email" readonly>
+                    </div>
+                    <button class="btn btn-primary" onclick="updateProfile()">
+                        <span class="btn-icon">💾</span>Save Changes
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Initialize router
+let router;
