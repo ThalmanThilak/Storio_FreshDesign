@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routing Test - Storio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #FF8A65;
+        }
+        .test-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .test-links a {
+            background: #FF6B35;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .test-links a:hover {
+            background: #FF8A65;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛣️ Routing Test - Storio</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <ol>
+            <li>Click the links below to test different pages</li>
+            <li>Sign in from the landing page</li>
+            <li>Verify you're redirected to the dashboard</li>
+            <li>Refresh the dashboard page - you should stay there</li>
+            <li>Click "Sign Out" - you should go back to landing page</li>
+            <li>Refresh the landing page - you should stay there</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Quick Navigation</h2>
+        <div class="test-links">
+            <a href="index.html" target="_blank">🏠 Landing Page</a>
+            <a href="dashboard.html" target="_blank">📊 Dashboard Page</a>
+            <a href="test-authentication.html" target="_blank">🔐 Auth Test</a>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Behavior</h2>
+        <ul>
+            <li class="success">✅ Landing page shows for unauthenticated users</li>
+            <li class="success">✅ Dashboard shows for authenticated users</li>
+            <li class="success">✅ Page refresh keeps you on the same page</li>
+            <li class="success">✅ Sign in redirects to dashboard</li>
+            <li class="success">✅ Sign out redirects to landing page</li>
+            <li class="info">ℹ️ Dashboard checks authentication on load</li>
+            <li class="info">ℹ️ Landing page redirects authenticated users to dashboard</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>URL Structure</h2>
+        <ul>
+            <li><strong>Landing Page:</strong> <code>index.html</code> or <code>/</code></li>
+            <li><strong>Dashboard:</strong> <code>dashboard.html</code> or <code>/dashboard</code></li>
+            <li><strong>Auth Test:</strong> <code>test-authentication.html</code></li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Testing Steps</h2>
+        <h3>Step 1: Test Landing Page</h3>
+        <ol>
+            <li>Open <a href="index.html" target="_blank">Landing Page</a></li>
+            <li>Verify you see the sign in/sign up buttons</li>
+            <li>Refresh the page - should stay the same</li>
+        </ol>
+
+        <h3>Step 2: Test Authentication Flow</h3>
+        <ol>
+            <li>Sign in with your credentials</li>
+            <li>Should automatically redirect to dashboard</li>
+            <li>Verify dashboard shows your name</li>
+        </ol>
+
+        <h3>Step 3: Test Dashboard Persistence</h3>
+        <ol>
+            <li>Refresh the dashboard page</li>
+            <li>Should stay on dashboard with your name</li>
+            <li>Try accessing landing page - should redirect to dashboard</li>
+        </ol>
+
+        <h3>Step 4: Test Sign Out</h3>
+        <ol>
+            <li>Click "Sign Out" on dashboard</li>
+            <li>Should redirect to landing page</li>
+            <li>Refresh landing page - should stay there</li>
+            <li>Try accessing dashboard - should stay on landing page</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Troubleshooting</h2>
+        <ul>
+            <li><strong>Dashboard not loading:</strong> Check browser console for errors</li>
+            <li><strong>Authentication issues:</strong> Use the <a href="test-authentication.html" target="_blank">Auth Test</a> page</li>
+            <li><strong>Redirect loops:</strong> Clear browser cache and try again</li>
+            <li><strong>Styling issues:</strong> Make sure all CSS files are loading</li>
+        </ul>
+    </div>
+
+    <script>
+        // Add some helpful console logging
+        console.log('Routing test page loaded');
+        console.log('Current URL:', window.location.href);
+        console.log('Available pages:');
+        console.log('- Landing: index.html');
+        console.log('- Dashboard: dashboard.html');
+        console.log('- Auth Test: test-authentication.html');
+    </script>
+</body>
+</html>

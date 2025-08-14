@@ -1,1 +1,10 @@
-/*    /index.html   200
+# Redirects for Storio App
+
+# Redirect dashboard to dashboard.html
+/dashboard /dashboard.html 200
+
+# Redirect root to index.html
+/ /index.html 200
+
+# Handle all other routes
+/* /index.html 200

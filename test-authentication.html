@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Test - Storio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #FF8A65;
+        }
+        #test-results {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 Authentication Persistence Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <ol>
+            <li>Open the main app in another tab: <a href="index.html" target="_blank">Open Storio App</a></li>
+            <li>Sign in to the app</li>
+            <li>Verify you see the dashboard with your name</li>
+            <li>Refresh the page (F5 or Ctrl+R)</li>
+            <li>Verify you're still on the dashboard</li>
+            <li>Click "Sign Out"</li>
+            <li>Refresh the page again</li>
+            <li>Verify you're back on the landing page</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Tests</h2>
+        <button onclick="testAuthState()">Check Current Auth State</button>
+        <button onclick="clearLocalStorage()">Clear Local Storage</button>
+        <button onclick="reloadPage()">Reload Page</button>
+    </div>
+
+    <div id="test-results">
+        <h3>Test Results:</h3>
+        <div id="results-content">Click "Check Current Auth State" to see results...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Behavior</h2>
+        <ul>
+            <li class="success">✅ User stays logged in after page refresh</li>
+            <li class="success">✅ Dashboard shows user's name correctly</li>
+            <li class="success">✅ Sign out works and redirects to landing page</li>
+            <li class="success">✅ Sign out persists after page refresh</li>
+            <li class="info">ℹ️ Authentication state is managed by Supabase</li>
+            <li class="info">ℹ️ Session tokens are stored securely</li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        async function testAuthState() {
+            const resultsDiv = document.getElementById('results-content');
+            resultsDiv.innerHTML = '<p>Checking authentication state...</p>';
+            
+            try {
+                const { data: { user }, error } = await window.supabaseClient.auth.getUser();
+                
+                if (error) {
+                    resultsDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+                    return;
+                }
+                
+                if (user) {
+                    resultsDiv.innerHTML = `
+                        <p class="success">✅ User is authenticated!</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Name:</strong> ${user.user_metadata?.full_name || 'Not set'}</p>
+                        <p><strong>User ID:</strong> ${user.id}</p>
+                        <p><strong>Last Sign In:</strong> ${new Date(user.last_sign_in_at).toLocaleString()}</p>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = '<p class="info">ℹ️ No user is currently authenticated</p>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="error">❌ Error checking auth state: ${error.message}</p>`;
+            }
+        }
+
+        function clearLocalStorage() {
+            localStorage.clear();
+            sessionStorage.clear();
+            document.getElementById('results-content').innerHTML = 
+                '<p class="info">ℹ️ Local storage and session storage cleared</p>';
+        }
+
+        function reloadPage() {
+            window.location.reload();
+        }
+
+        // Auto-check auth state on page load
+        window.addEventListener('load', () => {
+            setTimeout(testAuthState, 1000);
+        });
+    </script>
+</body>
+</html>
