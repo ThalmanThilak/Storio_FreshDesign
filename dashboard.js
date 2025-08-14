@@ -10,6 +10,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.logo').addEventListener('click', function() {
         window.location.href = 'index.html';
     });
+    
+    // Initialize story cards
+    setTimeout(() => {
+        initializeStoryCards();
+    }, 1000);
+    
+    // Add hover events to pause/resume autoplay
+    const storiesContainer = document.querySelector('.animated-stories-container');
+    if (storiesContainer) {
+        storiesContainer.addEventListener('mouseenter', pauseAutoplay);
+        storiesContainer.addEventListener('mouseleave', resumeAutoplay);
+    }
 });
 
 // Check if user is authenticated
@@ -127,6 +139,89 @@ function showContact() {
     showNotification('Contact Us - Coming Soon', 'info');
 }
 
+// Animated Story Cards Functionality
+let currentStoryIndex = 0;
+const totalStories = 5;
+let autoplayInterval;
+
+// Initialize story cards
+function initializeStoryCards() {
+    updateStoryDisplay();
+    startAutoplay();
+    
+    // Add click handlers for indicators
+    const indicators = document.querySelectorAll('.indicator');
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToStory(index);
+        });
+    });
+}
+
+// Update story display
+function updateStoryDisplay() {
+    const storyCards = document.querySelectorAll('.story-card');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    // Hide all story cards
+    storyCards.forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Remove active class from all indicators
+    indicators.forEach(indicator => {
+        indicator.classList.remove('active');
+    });
+    
+    // Show current story card
+    storyCards[currentStoryIndex].classList.add('active');
+    indicators[currentStoryIndex].classList.add('active');
+}
+
+// Next story
+function nextStory() {
+    currentStoryIndex = (currentStoryIndex + 1) % totalStories;
+    updateStoryDisplay();
+    resetAutoplay();
+}
+
+// Previous story
+function previousStory() {
+    currentStoryIndex = (currentStoryIndex - 1 + totalStories) % totalStories;
+    updateStoryDisplay();
+    resetAutoplay();
+}
+
+// Go to specific story
+function goToStory(index) {
+    currentStoryIndex = index;
+    updateStoryDisplay();
+    resetAutoplay();
+}
+
+// Start autoplay
+function startAutoplay() {
+    autoplayInterval = setInterval(() => {
+        nextStory();
+    }, 5000); // Change story every 5 seconds
+}
+
+// Reset autoplay
+function resetAutoplay() {
+    clearInterval(autoplayInterval);
+    startAutoplay();
+}
+
+// Pause autoplay on hover
+function pauseAutoplay() {
+    clearInterval(autoplayInterval);
+}
+
+// Resume autoplay when mouse leaves
+function resumeAutoplay() {
+    startAutoplay();
+}
+
 // Listen to authentication state changes
 window.supabaseClient.auth.onAuthStateChange((event, session) => {
     console.log('Auth state changed:', event, session);
@@ -135,3 +230,5 @@ window.supabaseClient.auth.onAuthStateChange((event, session) => {
         redirectToLanding();
     }
 });
+
+

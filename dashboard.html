@@ -57,6 +57,115 @@
                 <h1 class="dashboard-title" id="dashboard-title">Welcome to Your Dashboard</h1>
                 <p class="dashboard-subtitle">Your magical storytelling dashboard</p>
             </div>
+
+            <!-- Animated Story Cards Section -->
+            <div class="animated-stories-section">
+                <h2 class="section-title">Featured Story Outlines</h2>
+                <div class="animated-stories-container">
+                    <div class="stories-grid">
+                        <div class="story-card active" data-index="0">
+                            <div class="story-image">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Space Adventure">
+                            </div>
+                            <div class="story-content">
+                                <h3 class="story-title">Emma's Space Adventure</h3>
+                                <p class="story-excerpt">
+                                    "Once upon a time, in a galaxy not so far away, there lived a brave little girl named Emma who dreamed of exploring the stars. One magical night, her teddy bear came to life and offered to take her on an incredible journey through space..."
+                                </p>
+                                <div class="story-meta">
+                                    <span class="story-theme">🌌 Space Adventure</span>
+                                    <span class="story-duration">10 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="story-card" data-index="1">
+                            <div class="story-image">
+                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Ocean Journey">
+                            </div>
+                            <div class="story-content">
+                                <h3 class="story-title">Liam's Ocean Journey</h3>
+                                <p class="story-excerpt">
+                                    "Deep beneath the sparkling waves, in a world of coral castles and friendly sea creatures, young Liam discovered a magical seashell that could grant wishes. With his loyal dolphin friend by his side, they embarked on an underwater quest..."
+                                </p>
+                                <div class="story-meta">
+                                    <span class="story-theme">🌊 Ocean Adventure</span>
+                                    <span class="story-duration">8 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="story-card" data-index="2">
+                            <div class="story-image">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Forest Magic">
+                            </div>
+                            <div class="story-content">
+                                <h3 class="story-title">Sophia's Forest Magic</h3>
+                                <p class="story-excerpt">
+                                    "In an enchanted forest where trees whispered ancient secrets and flowers sang lullabies, little Sophia found a glowing acorn that opened a portal to a world where animals could talk and magic was real. Her adventure began when..."
+                                </p>
+                                <div class="story-meta">
+                                    <span class="story-theme">🌳 Forest Fantasy</span>
+                                    <span class="story-duration">12 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="story-card" data-index="3">
+                            <div class="story-image">
+                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Dragon Friend">
+                            </div>
+                            <div class="story-content">
+                                <h3 class="story-title">Alex and the Friendly Dragon</h3>
+                                <p class="story-excerpt">
+                                    "High up in the misty mountains, where clouds danced around castle towers, young Alex discovered a baby dragon who had lost its way. Instead of being afraid, Alex decided to help the little dragon find its family, leading to..."
+                                </p>
+                                <div class="story-meta">
+                                    <span class="story-theme">🐉 Dragon Tale</span>
+                                    <span class="story-duration">15 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="story-card" data-index="4">
+                            <div class="story-image">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Toy Kingdom">
+                            </div>
+                            <div class="story-content">
+                                <h3 class="story-title">The Toy Kingdom Awakens</h3>
+                                <p class="story-excerpt">
+                                    "When the last ray of sunlight disappeared from little Maya's bedroom, her toys began to stir. Her teddy bear became the wise king, her doll became a brave knight, and together they created a magical kingdom where..."
+                                </p>
+                                <div class="story-meta">
+                                    <span class="story-theme">🧸 Toy Adventure</span>
+                                    <span class="story-duration">7 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="stories-navigation">
+                        <button class="nav-btn prev-btn" onclick="previousStory()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="story-indicators">
+                            <span class="indicator active" data-index="0"></span>
+                            <span class="indicator" data-index="1"></span>
+                            <span class="indicator" data-index="2"></span>
+                            <span class="indicator" data-index="3"></span>
+                            <span class="indicator" data-index="4"></span>
+                        </div>
+                        <button class="nav-btn next-btn" onclick="nextStory()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
